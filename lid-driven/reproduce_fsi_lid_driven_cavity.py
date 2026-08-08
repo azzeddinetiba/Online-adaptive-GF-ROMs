@@ -853,7 +853,7 @@ def run_case_dt01():
             ))
             for idx in which_basis
         ]
-        titles = ["${\\Phi}_{2, 3}$", "${\\Phi}_{8, 3}$", "${\\Phi}_{*, 3}$", "$\\widebar{\\Phi}_{*, 3}$"]
+        titles = ["${\\Phi}_{2, 3}$", "${\\Phi}_{8, 3}$", "${\\Phi}_{*, 3}^0$", "$\\widebar{\\Phi}_{*, 3}^{N_t}$"]
 
         plot_four_forces(
             loads_paths=None,
