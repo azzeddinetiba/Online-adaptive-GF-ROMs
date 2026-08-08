@@ -118,6 +118,9 @@ DT = 0.01
 REMOVE_DTS_SINGLE = int(8 / 0.008)
 CUTOFF_INCR = int(20 / DT) - 1
 RANK = 18  # max of 99.99% energy criterion-based rank
+# This rank is calculated on an a priori basis. Computing it inside
+# TrackedFluidSurrog.train() is not yet implemented. It will be soon.
+# That would not change the behaviour or computing time.
 
 TRAIN_CODES = ["vel0-9rho0-9", "vel0-9rho1-1", "vel1-1rho1-1", "vel1-1rho0-9"]
 PARAM_INS = np.array([

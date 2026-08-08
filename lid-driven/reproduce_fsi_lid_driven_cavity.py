@@ -135,6 +135,10 @@ PARAM_INS = np.array([
     [0.5, 0.5, 0.5, 0.875, 0.875, 0.875, 1.25, 1.25, 1.25, 1.625, 1.625, 1.625, 2.0, 2.0, 2.0],
     [0.8, 1.25, 1.7, 0.8, 1.25, 1.7, 0.8, 1.25, 1.7, 0.8, 1.25, 1.7, 0.8, 1.25, 1.7],
 ])
+RANK = 8  # max of 99.99% energy criterion-based rank
+# This rank is calculated on an a priori basis. Computing it inside
+# TrackedFluidSurrog.train() is not yet implemented. It will be soon.
+# That would not change the behaviour or computing time.
 
 
 def build_names(train_subdir):
@@ -218,7 +222,7 @@ def run_case_dt03():
     )
     fluidSurr.train(
         dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-        rank_pres=8, smoothing="auto", kernel="polyC", degree=1,
+        rank_pres=RANK, smoothing="auto", kernel="polyC", degree=1,
         norm=[False, True], norm_regr="max", normalization=["max", "norm"],
         params=PARAM_INS, weights=True, solidReduc=solidROM.reducLoad,
         multiple_param_regressor=True, cleanup=False,
@@ -237,7 +241,7 @@ def run_case_dt03():
     fluidSurr2 = FluidSurrog(reTrainThres=reTrainThres, maxLen=maxLen)
     fluidSurr2.train(
         dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-        rank_pres=8, smoothing="auto", kernel="polyC", degree=1,
+        rank_pres=RANK, smoothing="auto", kernel="polyC", degree=1,
         norm=[False, True], norm_regr="max", normalization=["max", "norm"],
         weights=True, solidReduc=solidROM.reducLoad, multiple_param_regressor=False,
     )
@@ -263,7 +267,7 @@ def run_case_dt03():
     )
     fluidSurr3.train(
         dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-        rank_pres=8, smoothing="auto", hidden_layers=np.array([400, 300, 400, 300, 20]),
+        rank_pres=RANK, smoothing="auto", hidden_layers=np.array([400, 300, 400, 300, 20]),
         kernel="polyC", degree=1, norm=[False, True], norm_regr="max",
         normalization=["max", "norm"], params=PARAM_INS, weights=True,
         solidReduc=solidROM.reducLoad, multiple_param_regressor=True,
@@ -478,7 +482,7 @@ def run_case_dt03():
         )
         fluidSurrNln.train(
             dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-            rank_pres=8, smoothing=k_reg, kernel="polyC", degree=2,
+            rank_pres=RANK, smoothing=k_reg, kernel="polyC", degree=2,
             norm=[False, True], norm_regr="max", normalization=["max", "norm"],
             params=PARAM_INS, weights=True, solidReduc=solidROM.reducLoad,
             multiple_param_regressor=True, cleanup=True,
@@ -534,7 +538,7 @@ def run_case_dt03():
         fluidSurr2Nln = FluidSurrog(reTrainThres=reTrainThres, maxLen=maxLen)
         fluidSurr2Nln.train(
             dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-            rank_pres=8, smoothing=k_reg, kernel="polyC", degree=2,
+            rank_pres=RANK, smoothing=k_reg, kernel="polyC", degree=2,
             norm=[False, True], norm_regr="max", normalization=["max", "norm"],
             weights=None, solidReduc=solidROM.reducLoad, multiple_param_regressor=False,
         )
@@ -568,7 +572,7 @@ def run_case_dt03():
     fluidSurr4 = FluidSurrog(reTrainThres=reTrainThres, maxLen=maxLen)
     fluidSurr4.train(
         dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-        rank_pres=8, smoothing="auto", kernel="polyC", degree=1,
+        rank_pres=RANK, smoothing="auto", kernel="polyC", degree=1,
         norm=[False, True], norm_regr="max", normalization=["max", "norm"],
         weights=True, solidReduc=solidROM.reducLoad, multiple_param_regressor=False,
         params=np.repeat(PARAM_INS, [a.shape[1] for a in loadData_forFluid_list], axis=1),
@@ -595,7 +599,7 @@ def run_case_dt03():
 
     fluidSurrRdmd = RDMDC(epsilon=0.01, lambdaForgetBasis=0.95, lambdaForget=0.95)
     fluidSurrRdmd.decompose(
-        loadConvData_forFluid[:, :], rank=8, Y=loadData_forFluid[:, :],
+        loadConvData_forFluid[:, :], rank=RANK, Y=loadData_forFluid[:, :],
         u_input=solidROM.reducLoad.encode(dispData_forFluid[:, :]),
         precomp_std=fluidSurr.reducLoad.rom.snap_norms,
         precomp_mean=fluidSurr.reducLoad.rom.mean_flow,
@@ -697,7 +701,7 @@ def run_case_dt01():
     )
     fluidSurr.train(
         dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-        rank_pres=8, smoothing=1e-4, kernel="polyC", degree=1,
+        rank_pres=RANK, smoothing=1e-4, kernel="polyC", degree=1,
         norm=[False, True], norm_regr="max", normalization=["max", "norm"],
         params=PARAM_INS, weights=True, solidReduc=solidROM.reducLoad,
         multiple_param_regressor=True, cleanup=False,

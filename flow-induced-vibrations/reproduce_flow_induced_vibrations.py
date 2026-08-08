@@ -103,6 +103,9 @@ FIELD_NAMES  = ["Vx_grid", "Vy_grid", "p_grid"]
 N_GRID       = 6405            # spatial grid points per field
 N_FIELDS     = len(FIELD_NAMES)
 RANK         = 64              # maximum of 99.9% energy criterion-based ranks
+# This rank is calculated on an a priori basis. Computing it inside
+# TrackedFluidSurrog.train() is not yet implemented. It will be soon.
+# That would not change the behaviour or computing time.
 
 train_params   = ["f0p50_A0p20", "f0p70_A0p20", "f1p10_A0p20", "f1p30_A0p20"]
 train_lens     = [800, 880, 1080, 1160]   # total snapshots per parameter
