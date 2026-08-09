@@ -1,4 +1,4 @@
-# Online Adaptive GF-ROMs
+# Online Adaptive Galerkin-Free ROMs via Grassmann Interpolation and Geodesic Subspace Updates
 
 This repository contains the reproduction scripts and environment definitions for the results presented in:
 
@@ -56,6 +56,19 @@ The benchmark environments were tested with the Python versions and package vers
 
 For reproducibility, use the requirements file belonging to the benchmark being reproduced. The three benchmarks may use different versions of NumPy, SciPy, scikit-learn, and `rom_am`.
 
-## License and citation
+## Citation
 
-Incoming ...
+- Incoming
+
+## License
+
+[![CC BY-NC-ND 4.0][cc-by-nc-nd-shield]][cc-by-nc-nd]
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International License][cc-by-nc-nd].
+
+[![CC BY-NC-ND 4.0][cc-by-nc-nd-image]][cc-by-nc-nd]
+
+[cc-by-nc-nd]: http://creativecommons.org/licenses/by-nc-nd/4.0/
+[cc-by-nc-nd-image]: https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png
+[cc-by-nc-nd-shield]: https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg
