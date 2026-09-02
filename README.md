@@ -2,7 +2,7 @@
 
 This repository contains the reproduction scripts and environment definitions for the results presented in:
 
-**Paper:** ________________________________
+**Paper: Online adaptive non-intrusive model reduction via manifold interpolation and subspace updates: application to FSI convergence acceleration.**
 
 The repository is organized by benchmark. To reproduce a benchmark, enter its folder, install the dependencies listed in that folder's `requirements.txt`, provide the required data, and run the documented reproduction script.
 
