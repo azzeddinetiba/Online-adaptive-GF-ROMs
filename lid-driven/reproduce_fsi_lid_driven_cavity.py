@@ -701,7 +701,7 @@ def run_case_dt01():
     )
     fluidSurr.train(
         dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
-        rank_pres=RANK, smoothing=1e-4, kernel="polyC", degree=1,
+        rank_pres=RANK, smoothing="auto", kernel="polyC", degree=1,
         norm=[False, True], norm_regr="max", normalization=["max", "norm"],
         params=PARAM_INS, weights=True, solidReduc=solidROM.reducLoad,
         multiple_param_regressor=True, cleanup=False,
