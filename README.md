@@ -46,7 +46,7 @@ Some data-containing folders are intentionally empty (with relative symbolic lin
 
 The data can be obtained from the following Zenodo repository:
 
-**Zenodo repository:** ________________________________
+**Zenodo repository:** Online-adaptive-GF-ROMs-Data, https://doi.org/10.5281/zenodo.21728041 .
 
 After downloading the data, place it in the expected folder or pass its location using the corresponding script argument. Do not commit the full data collection to this repository.
 
