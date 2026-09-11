@@ -652,11 +652,10 @@ print("Training rDMDc ...")
 loadData_forFluid, dispData_forFluid, loadConvData_forFluid, size_forFluid, _, _, _, _ = \
     load_train_data(names, remove_dts, return_list=False)
 
-n_dmd = min(5000, loadConvData_forFluid.shape[1])
 fluidSurrRdmd = RDMDC(epsilon=0.01, lambdaForgetBasis=0.95, lambdaForget=0.95)
 fluidSurrRdmd.decompose(
-    loadConvData_forFluid[:, :n_dmd], rank=RANK, Y=loadData_forFluid[:, :n_dmd],
-    u_input=solidROM.reducLoad.encode(dispData_forFluid[:, :n_dmd]),
+    loadConvData_forFluid, rank=RANK, Y=loadData_forFluid,
+    u_input=solidROM.reducLoad.encode(dispData_forFluid),
     precomp_std=fluidSurr.reducLoad.rom.snap_norms,
     precomp_mean=fluidSurr.reducLoad.rom.mean_flow,
     precomputed_modes=fluidSurr3.reducLoad.pod.modes.copy(),
