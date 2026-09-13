@@ -2,7 +2,7 @@
 
 This repository contains the reproduction scripts and environment definitions for the results presented in:
 
-**Paper: Online adaptive non-intrusive model reduction via manifold interpolation and subspace updates: application to FSI convergence acceleration.**
+**Paper: [Online adaptive non-intrusive model reduction via manifold interpolation and subspace updates: application to FSI convergence acceleration.](https://doi.org/10.2139/ssrn.7450711)**
 
 The repository is organized by benchmark. To reproduce a benchmark, enter its folder, install the dependencies listed in that folder's `requirements.txt`, provide the required data, and run the documented reproduction script.
 
@@ -42,7 +42,7 @@ The scripts create an output directory named `results_figures_arrays` by default
 
 ## Data
 
-Some data-containing folders are intentionally empty (with relative symbolic links) in this public repository because the full simulation data is distributed separately.
+Some data-containing folders are intentionally empty (with relative symbolic links) in this public repository because the training data is distributed separately.
 
 The data can be obtained from the following Zenodo repository:
 
@@ -58,7 +58,7 @@ For reproducibility, use the requirements file belonging to the benchmark being 
 
 ## Citation
 
-- Incoming
+- TIBA, Azzeddine and De Vuyst, Florian and Mortazavi, Iraj, Online adaptive non-intrusive model reduction via manifold interpolation and subspace updates: application to FSI convergence acceleration. https://doi.org/10.2139/ssrn.7450711
 
 ## License
 
