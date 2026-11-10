@@ -117,7 +117,7 @@ DT_NAME = "dt01"
 DT = 0.01
 REMOVE_DTS_SINGLE = int(8 / 0.008)
 CUTOFF_INCR = int(20 / DT) - 1
-RANK = 18  # max of 99.99% energy criterion-based rank
+RANK = 24  # max of 99.99% energy criterion-based rank
 # This rank is calculated on an a priori basis. Computing it inside
 # TrackedFluidSurrog.train() is not yet implemented. It will be soon.
 # That would not change the behaviour or computing time.
@@ -127,7 +127,7 @@ PARAM_INS = np.array([
     [0.9, 0.9, 1.1, 1.1],
     [0.9, 1.1, 1.1, 0.9],
 ])
-TEST_CODE = "vel1-0rho1-0"
+TEST_CODE = "vel1-0rho1-0-longer"
 
 
 def build_names(codes):
@@ -150,14 +150,15 @@ def smooth(data, window):
 def load_train_data(names, remove_dts, return_list):
     return importData(
         names, remove_dts, remove_noise=True, return_list=return_list,
-        remove_corners=True, cutoff_incr=[CUTOFF_INCR],
+        remove_corners=True, cutoff_incr=[CUTOFF_INCR], removed_dofs=[896, 897, 900, 901]
     )
 
 
 def load_test_data():
     return importData(
         [f"{DATA_ROOT}/{DT_NAME}/{TEST_CODE}/coSimData/"], [REMOVE_DTS_SINGLE],
-        remove_noise=True, remove_corners=True, cutoff_incr=[CUTOFF_INCR],
+        remove_noise=True, remove_corners=True, cutoff_incr=[int(40 / DT) - 1],
+        removed_dofs=[896, 897, 900, 901]
     )
 
 
@@ -171,12 +172,12 @@ remove_dts = [REMOVE_DTS_SINGLE] * len(TRAIN_CODES)
 print("Training the solid ROM ...")
 (_, _, _, _, loadData_forSolid, dispData_forSolid,
  dispConvData_forSolid, size_forSolid) = importData(
-    names, remove_dts, remove_corners=True, remove_noise=True, cutoff_incr=[CUTOFF_INCR],
+    names, remove_dts, remove_corners=True, remove_noise=True, cutoff_incr=[CUTOFF_INCR], removed_dofs=[896, 897, 900, 901]
 )
 solidROM = FluidSurrog(maxLen=11000, reTrainThres=780)
 solidROM.train(
     loadData_forSolid, dispConvData_forSolid, dispData_forSolid,
-    rank_pres=RANK, rank_disp=60, smoothing=1e-6,
+    rank_pres=18, rank_disp=3, smoothing=1e-6,
     kernel="polyC", degree=1, norm=[True, True],
     center=[True, True], normalization=["max", "max"],
     norm_regr="max", solidReduc=None,
@@ -194,7 +195,7 @@ loadData_forFluid, dispData_forFluid, loadConvData_forFluid, size_forFluid, _, _
     load_train_data(names, remove_dts, return_list=True)
 
 reTrainThres = 60
-maxLen = 11000
+maxLen = 5000
 updateThres = 200
 
 fluidSurr = TrackedFluidSurrog(
@@ -205,7 +206,7 @@ t0 = time.time()
 fluidSurr.train(
     dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
     rank_pres=RANK, smoothing=1e-5, kernel="polyC", degree=1,
-    norm=[False, True], norm_regr=None, normalization=["max", "norm"],
+    norm=[False, True], norm_regr="std", normalization=["max", "norm"],
     params=PARAM_INS, weights=True, solidReduc=solidReducSaved,
     multiple_param_regressor=True, cleanup=False,
 )
@@ -222,12 +223,13 @@ print(f"  Pre-prediction time: {time.time() - t0:.3f} s")
 # 3.  Refresh the solid ROM against the trained fluid reducer
 # ===========================================================================
 _, _, _, _, loadData_forSolid, dispData_forSolid, dispConvData_forSolid, size_forSolid = \
-    importData(names, remove_dts, remove_corners=True, remove_noise=True, cutoff_incr=[CUTOFF_INCR])
+    importData(names, remove_dts, remove_corners=True, remove_noise=True, cutoff_incr=[CUTOFF_INCR],
+               removed_dofs=[896, 897, 900, 901])
 
 solidROM = FluidSurrog(maxLen=11000, reTrainThres=780)
 solidROM.train(
     loadData_forSolid, dispConvData_forSolid, dispData_forSolid,
-    rank_pres=20, rank_disp=60, smoothing=1e-6,
+    rank_pres=18, rank_disp=3, smoothing=1e-6,
     kernel="polyC", degree=1, norm=[True, True],
     center=[True, True], normalization=["max", "max"],
     norm_regr="max", solidReduc=fluidSurr.reducLoad, precomputedReducLoad=solidReducSaved,
@@ -388,7 +390,7 @@ fluidSurr2 = FluidSurrog(reTrainThres=reTrainThres, maxLen=maxLen)
 fluidSurr2.train(
     dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
     rank_pres=RANK, smoothing=1e-5, kernel="polyC", degree=1,
-    norm=[False, True], norm_regr=None, normalization=["max", "norm"],
+    norm=[False, True], norm_regr="std", normalization=["max", "norm"],
     weights=True, solidReduc=solidReducSaved, multiple_param_regressor=False,
 )
 
@@ -411,7 +413,7 @@ fluidSurr2Nln = FluidSurrog(reTrainThres=reTrainThres, maxLen=maxLen)
 fluidSurr2Nln.train(
     dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
     rank_pres=RANK, smoothing=1e-5, kernel="polyC", degree=2,
-    norm=[False, True], norm_regr=None, normalization=["max", "norm"],
+    norm=[False, True], norm_regr="std", normalization=["max", "norm"],
     weights=True, solidReduc=solidReducSaved, multiple_param_regressor=False,
 )
 results2Nln = np.empty_like(loadTestData_Fl)
@@ -441,7 +443,7 @@ fluidSurr3 = TrackedFluidSurrog(
 fluidSurr3.train(
     dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
     rank_pres=RANK, smoothing=1e-5, kernel="polyC", degree=1,
-    norm=[False, True], norm_regr=None, normalization=["max", "norm"],
+    norm=[False, True], norm_regr="std", normalization=["max", "norm"],
     params=PARAM_INS, weights=True, solidReduc=solidReducSaved,
     multiple_param_regressor=True, cleanup=True,
 )
@@ -507,7 +509,7 @@ for i in range(dispTestData_Fl.shape[1]):
     fluidSurr.augmentData(
         dispTestData_Fl[:, [i]], loadConvTestData_Fl[:, [i]], loadTestData_Fl[:, [i]],
         solidReduc=solidROM.reducLoad, params=np.array([[1.0], [1.0]]),
-        stepsize=None, computeAngle=computeOnlineAngle,
+        stepsize="complete", computeAngle=computeOnlineAngle,
     )
     if computeTotalAngle:
         totalAngle.append(angles(firstPredictedBasis, fluidSurr.cloneBasis))
@@ -581,12 +583,12 @@ loadData_forFluid, dispData_forFluid, loadConvData_forFluid, size_forFluid, _, _
 t0 = time.time()
 fluidSurrNln = TrackedFluidSurrog(
     reTrainThres=reTrainThres, maxLen=maxLen, updateBasis=True,
-    updateThres=updateThres, updateOmega=True,
+    updateThres=updateThres, updateOmega=True, # automatic_weight=True
 )
 fluidSurrNln.train(
     dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
     rank_pres=RANK, smoothing=1e-5, kernel="polyC", degree=2,
-    norm=[False, True], norm_regr=None, normalization=["max", "norm"],
+    norm=[False, True], norm_regr="std", normalization=["max", "norm"],
     params=PARAM_INS, weights=True, solidReduc=solidReducSaved,
     multiple_param_regressor=True, cleanup=True,
 )
@@ -602,7 +604,7 @@ for i in range(dispTestData_Fl.shape[1]):
     fluidSurrNln.augmentData(
         dispTestData_Fl[:, [i]], loadConvTestData_Fl[:, [i]], loadTestData_Fl[:, [i]],
         solidReduc=solidROM.reducLoad, params=np.array([[1.0], [1.0]]),
-        stepsize=None, computeAngle=False,
+        stepsize="complete", computeAngle=False,
     )
 print(
     f"Total prediction and update time for the proposed method"
@@ -628,7 +630,7 @@ fluidSurr4 = FluidSurrog(reTrainThres=reTrainThres, maxLen=maxLen)
 fluidSurr4.train(
     dispData_forFluid, loadConvData_forFluid, loadData_forFluid,
     rank_pres=RANK, smoothing=1e-5, kernel="polyC", degree=1,
-    norm=[False, True], norm_regr=None, normalization=["max", "norm"],
+    norm=[False, True], norm_regr="std", normalization=["max", "norm"],
     weights=True, solidReduc=solidReducSaved, multiple_param_regressor=False,
     params=np.repeat(PARAM_INS, [a.shape[1] for a in loadData_forFluid_list], axis=1),
 )

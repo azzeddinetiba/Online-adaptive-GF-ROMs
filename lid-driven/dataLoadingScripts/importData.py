@@ -4,7 +4,7 @@ from loadingDynamicalData import bringDynamicalLoadDispData as aa
 
 
 def importData(names, remove_dts, remove_noise=True, return_list=False, remove_corners = False,
-              cutoff_incr = [699]):
+              cutoff_incr = [699], removed_dofs=None):
     assert len(remove_dts) == len(names)
 
     trainitersolidDispData = []
@@ -51,7 +51,7 @@ def importData(names, remove_dts, remove_noise=True, return_list=False, remove_c
     for i in range(len(names)):
         _, _, _, trainiterLoadData_, trainiterDispData_, trainRepflLoadDataConv_, \
                     _,_, _ = aa(cutoff_names = [names[i]], cutoff_incr = cutoff_incr,
-                                remove_corners=remove_corners)
+                                remove_corners=remove_corners, removed_dofs=removed_dofs)
         # =====  At this point, the iterations of the first time step are removed
     
         if remove_dts[i] is not None:

@@ -1,6 +1,6 @@
 import numpy as np
 
-def bringDynamicalLoadDispData(cutoff_names = ["fomData/1.5/coSimData/"], cutoff_incr = [699], remove_corners=False):
+def bringDynamicalLoadDispData(cutoff_names = ["fomData/1.5/coSimData/"], cutoff_incr = [699], remove_corners=False, removed_dofs=None):
 
     assert len(cutoff_names) == len(cutoff_incr)
 
@@ -25,7 +25,10 @@ def bringDynamicalLoadDispData(cutoff_names = ["fomData/1.5/coSimData/"], cutoff
     for i in cutoff_names:
         iters = np.load(i+"/iters.npy")
         if remove_corners:
-            flLoadData = np.load(i+"/fluid_load_data_from_fluid.npy")[2:-2, :]
+            if removed_dofs is not None:
+                flLoadData = np.delete(np.load(i+"/fluid_load_data_from_fluid.npy"), removed_dofs, axis=0)
+            else:
+                flLoadData = np.load(i+"/fluid_load_data_from_fluid.npy")[2:-2, :]
         else:
             flLoadData = np.load(i+"/fluid_load_data_from_fluid.npy")
         dispData = np.load(i+"/disp_data.npy")[map, :]#[:, :iters[:449].sum()]
