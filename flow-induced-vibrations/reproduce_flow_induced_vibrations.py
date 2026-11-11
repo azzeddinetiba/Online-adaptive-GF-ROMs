@@ -433,7 +433,7 @@ print("Generating figReducedSnaps3D.pdf ...")
 
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
-fig, ax = plt.subplots(2, 2, figsize=(6.3, 5.0), subplot_kw={"projection": "3d"})
+fig, ax = plt.subplots(2, 2, figsize=(7.5, 6.6), subplot_kw={"projection": "3d"})
 strtIncrems = [20, 20, 39, 40]
 k = 0;  v = 1;  j = 5
 
@@ -453,15 +453,15 @@ for i in range(4):
                      linewidth=0.7, alpha=0.8,
                      label=rf"$\widehat{{\boldsymbol{{x}}}}_{i+1}^r$")
 
-    ax[poss[i]].legend(fontsize=7, loc="best")
+    ax[poss[i]].legend(fontsize=9, loc="best")
     ax[poss[i]].grid(False)
-    ax[poss[i]].set_xlabel(rf"${k+1}^{{st}}$ component", fontsize=8, labelpad=2)
-    ax[poss[i]].set_ylabel(rf"${v+1}^{{nd}}$ component", fontsize=8, labelpad=2)
-    ax[poss[i]].set_zlabel(rf"${j+1}^{{th}}$ component", fontsize=8, labelpad=2)
-    ax[poss[i]].tick_params(axis="both", which="major", labelsize=7, pad=1)
+    ax[poss[i]].set_xlabel(rf"${k+1}^{{st}}$ component", fontsize=9, labelpad=6)
+    ax[poss[i]].set_ylabel(rf"${v+1}^{{nd}}$ component", fontsize=9, labelpad=6)
+    ax[poss[i]].set_zlabel(rf"${j+1}^{{th}}$ component", fontsize=9, labelpad=4)
+    ax[poss[i]].tick_params(axis="both", which="major", labelsize=8, pad=1)
 
-fig.tight_layout(pad=0.5, w_pad=0.3, h_pad=0.3)
-fig.savefig(f"{OUTPUT_DIR}/figReducedSnaps3D.pdf", bbox_inches="tight")
+fig.subplots_adjust(left=0.02, right=0.96, bottom=0.06, top=0.98, wspace=0.18, hspace=0.18)
+fig.savefig(f"{OUTPUT_DIR}/figReducedSnaps3D.pdf", bbox_inches="tight", pad_inches=0.3)
 plt.close(fig)
 
 
